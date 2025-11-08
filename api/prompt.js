@@ -1,36 +1,54 @@
-export function buildPrompt(objectName) {
-  return `
-Minimal 3D icon of a ${objectName}, orthographic view (no perspective).
+import objects from "./data/objects.json" assert { type: "json" };
 
-Angle:
-- Slight top-front angle (~20°) showing front and one side.
+export function buildPrompt() {
+  // 랜덤 객체 선택
+  const object = objects[Math.floor(Math.random() * objects.length)];
 
-Shape & Form:
-- Smooth, balanced geometry with subtle bevels.
-- Stable proportions, centered neatly in a square frame.
+  // 네가 원하는 스타일 프롬프트
+  const prompt = `
+Minimal 3D icon of a **${object}**.
+
+Perspective:
+- Orthographic view (no perspective distortion)
+- Slight top-front angle (~20°) showing front + side
+
+Form & Structure:
+- Balanced, clean geometry with smooth curvature
+- Subtle bevels on rounded parts
+- Proportions centered and stable within square canvas
 
 Color Palette:
 - Marine White #F4F5F7 base
-- Navy Blue #2F4C72 accents
+- Navy Blue #2F4C72 accent line
 - Deep Gray #4A4B4D for windows/details
-- Signal Red #C83934 as a single highlight point
+- Signal Red #C83934 as highlight point
 - Aqua Blue #A9D8E9 for subtle reflection hints
 
-Material:
-- Semi-gloss painted plastic; glass parts glossy with soft reflections.
-- No noise/grime; premium clean finish.
+Material & Texture:
+- Semi-gloss painted surface
+- Glass parts glossy with subtle reflections
+- No rough noise or grime
+- Clean premium finish
 
 Lighting:
-- Neutral daylight (~6000K). Soft key from upper-left, gentle fill opposite.
-- Very soft rim light; no hard shadows, only soft ambient occlusion.
+- Neutral daylight (6000K)
+- Soft key from upper-left
+- Gentle fill from opposite side
+- Very soft rim light to define silhouette
+- No harsh shadows (use soft ambient occlusion only)
 
 Background:
-- Soft gradient Aqua Blue → Mist Gray, no horizon line.
+- Soft gradient (Aqua Blue → Mist Gray)
+- No horizon line, smooth atmospheric fade
 
-Rendering:
-- Blender-like PBR feel; smooth highlight rolloff; noise-free.
+Rendering Style:
+- Blender-like physically-based rendering
+- Smooth shading transitions
+- Noise-free final output
 
 Mood:
-- Calm, minimal, balanced.
-  `.trim();
+- Calm, balanced, peaceful maritime vibe
+`;
+
+  return { object, prompt };
 }
