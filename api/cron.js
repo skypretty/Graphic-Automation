@@ -1,5 +1,7 @@
 export default async function handler(req, res) {
-  const domain = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
+  const domain = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000";
 
   const generateURL = `${domain}/api/generate`;
 
@@ -9,13 +11,13 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       ok: true,
-      result
+      result,
     });
-    
+
   } catch (err) {
     return res.status(500).json({
       ok: false,
-      error: err.message
+      error: err.message,
     });
   }
 }
