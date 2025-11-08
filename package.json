@@ -1,0 +1,8 @@
+{
+  "name": "graphic-automation",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "openai": "^4.55.0"
+  }
+}
