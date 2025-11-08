@@ -3,7 +3,7 @@ import OpenAI from "openai";
 export default async function handler(req, res) {
   try {
     const client = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,   // env 이름 확인
+      apiKey: process.env.OPENAI_API_KEY,
     });
 
     const prompt =
