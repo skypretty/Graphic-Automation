@@ -1,51 +1,31 @@
-// api/generate.js (CommonJS)
-const { buildPrompt } = require("./prompt");
+import OpenAI from "openai";
 
-async function runGeneration() {
-  const { object, prompt } = buildPrompt();
+export default async function handler(req, res) {
+  try {
+    const client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY
+    });
 
-  const resp = await fetch("https://api.openai.com/v1/images/generations", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-    },
-    body: JSON.stringify({
+    const prompt = req.body?.prompt || "Minimal 3D object, soft lighting, clean background, 1:1";
+
+    const response = await client.images.generate({
       model: "gpt-image-1",
       prompt,
       size: "1024x1024",
-      n: 1,
-    }),
-  });
+      quality: "high"
+    });
 
-  if (!resp.ok) {
-    const err = await resp.text().catch(() => "");
-    throw new Error(`OpenAI error: ${resp.status} ${resp.statusText} ${err}`);
+    const image_base64 = response.data[0].b64_json;
+    const image_url = `data:image/png;base64,${image_base64}`;
+
+    return res.status(200).json({
+      ok: true,
+      promptUsed: prompt,
+      image: image_url
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ ok: false, error: error.message });
   }
-
-  const data = await resp.json();
-  const image_url = data?.data?.[0]?.url || null;
-
-  return {
-    ok: true,
-    object,
-    prompt,
-    image_url,
-    model: "gpt-image-1",
-    ts: new Date().toISOString(),
-  };
 }
-
-// API 핸들러 (브라우저에서 /api/generate로 테스트)
-module.exports = async function handler(req, res) {
-  try {
-    const out = await runGeneration();
-    res.status(200).json(out);
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ ok: false, error: String(e.message || e) });
-  }
-};
-
-// cron에서 재사용
-module.exports.runGeneration = runGeneration;
