@@ -2,8 +2,7 @@
   "name": "graphic-automation",
   "version": "1.0.0",
   "type": "module",
-  "private": true,
   "dependencies": {
-    "openai": "^4.57.0"
+    "openai": "^4.0.0"
   }
 }
